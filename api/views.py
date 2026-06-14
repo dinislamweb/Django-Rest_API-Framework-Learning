@@ -1,10 +1,13 @@
-#from django.shortcuts import render
-#from django.http import JsonResponse
+from django.shortcuts import render
+from django.http import JsonResponse
 from students.models import Student
-from .serializers import StudentSerialier
+from .serializers import StudentSerialzier,EmployeeSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from employees.models import Employee
+from django.http import Http404
 
 # GET POST
 
@@ -12,11 +15,11 @@ from rest_framework.decorators import api_view
 def studentsView(request):
     if request.method == 'GET':
         students = Student.objects.all()
-        serializer = StudentSerialier(students,many=True)
+        serializer = StudentSerialzier(students,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
-        serializer = StudentSerialier(data=request.data)
+        serializer = StudentSerialzier(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -32,11 +35,11 @@ def StudentDetailView(request,pk):
     except Student.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
-        serializer = StudentSerialier(student)
+        serializer = StudentSerialzier(student)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     elif request.method == 'PUT':
-        serializer = StudentSerialier(student,data=request.data)
+        serializer = StudentSerialzier(student,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_200_OK)
@@ -45,3 +48,23 @@ def StudentDetailView(request,pk):
     elif request.method == "DELETE":
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class Employees(APIView):
+    def get (self,request):
+        employees = Employee.objects.all()
+        serializer = EmployeeSerializer(employees,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+      # POST → Create a new employee
+    def post(self, request):
+        employee = Employee.objects.all()
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+        
+        
