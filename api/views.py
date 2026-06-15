@@ -109,10 +109,14 @@ class Employees(mixins.ListModelMixin,
     def post(self,request):
         return self.create(request)
     
-class EmployeeDetail(mixins.RetrieveModelMixin,
-                         mixins.UpdateModelMixin,
-                         mixins.DestroyModelMixin,
-                         generics.GenericAPIView):
-    pass
+class EmployeeDetail(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    
+    # get using primary key
+    
+    def get(self,request, pk):
+        return self.retrieve(request,pk)
+    
         
         
