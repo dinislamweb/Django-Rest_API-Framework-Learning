@@ -118,5 +118,14 @@ class EmployeeDetail(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.De
     def get(self,request, pk):
         return self.retrieve(request,pk)
     
+    # To update data using primary key
+    def put(self,request, pk):
+        return self.update(request,pk)
+    
+    # delete object based on primary key
+    
+    def delete(self,request, pk):
+        return self.destroy(request,pk)
+    
         
         
