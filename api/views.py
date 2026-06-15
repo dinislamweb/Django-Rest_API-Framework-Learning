@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from employees.models import Employee
 from django.http import Http404
+from rest_framework import mixins, generics
 
 # GET POST
 
@@ -49,49 +50,65 @@ def StudentDetailView(request,pk):
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-class Employees(APIView):
-    def get (self,request):
-        employees = Employee.objects.all()
-        serializer = EmployeeSerializer(employees,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+# class Employees(APIView):
+#     def get (self,request):
+#         employees = Employee.objects.all()
+#         serializer = EmployeeSerializer(employees,many=True)
+#         return Response(serializer.data,status=status.HTTP_200_OK)
     
-      # POST → Create a new employee
-    def post(self, request):
-        employee = Employee.objects.all()
-        serializer = EmployeeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#       # POST → Create a new employee
+#     def post(self, request):
+#         employee = Employee.objects.all()
+#         serializer = EmployeeSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class EmployeeDetail(APIView):
-    def get_object(self,pk):
-        try:
-            return Employee.objects.get(pk=pk)
-        except Employee.DoesNotExist:
-            raise Http404
+# class EmployeeDetail(APIView):
+#     def get_object(self,pk):
+#         try:
+#             return Employee.objects.get(pk=pk)
+#         except Employee.DoesNotExist:
+#             raise Http404
     
-    # GET → Retrieve a single employee
-    def get(self, request, pk):
-        employee = self.get_object(pk)
-        serializer = EmployeeSerializer(employee)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#     # GET → Retrieve a single employee
+#     def get(self, request, pk):
+#         employee = self.get_object(pk)
+#         serializer = EmployeeSerializer(employee)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # PUT → Update an existing employee
-    def put(self, request, pk):
-        employee = self.get_object(pk)
-        serializer = EmployeeSerializer(employee, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     # PUT → Update an existing employee
+#     def put(self, request, pk):
+#         employee = self.get_object(pk)
+#         serializer = EmployeeSerializer(employee, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    # DELETE → Remove an employee
-    def delete(self, request, pk):
-        employee = self.get_object(pk)
-        employee.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     # DELETE → Remove an employee
+#     def delete(self, request, pk):
+#         employee = self.get_object(pk)
+#         employee.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
+class Employees(mixins.ListModelMixin,
+                   mixins.CreateModelMixin,
+                   generics.GenericAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    
+    # GET → List all employees
+    def get(self, request):
+        return self.list(request)
+    
+class EmployeeDetail(mixins.RetrieveModelMixin,
+                         mixins.UpdateModelMixin,
+                         mixins.DestroyModelMixin,
+                         generics.GenericAPIView):
+    pass
         
         
