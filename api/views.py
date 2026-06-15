@@ -105,6 +105,10 @@ class Employees(mixins.ListModelMixin,
     def get(self, request):
         return self.list(request)
     
+    # POST -> create employees
+    def post(self,request):
+        return self.create(request)
+    
 class EmployeeDetail(mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin,
                          mixins.DestroyModelMixin,
