@@ -129,12 +129,15 @@ def StudentDetailView(request,pk):
 #         return self.destroy(request,pk)
 
 #Generics
-class Employees(generics.ListAPIView,generics.ListCreateAPIView):
+class Employees(generics.ListCreateAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    
+
+# Primary key based operations 
 class EmployeeDetail(generics.RetrieveAPIView):
-    pass
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    lookup_field = 'pk'
     
         
         
