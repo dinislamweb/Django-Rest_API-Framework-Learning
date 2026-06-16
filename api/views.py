@@ -129,7 +129,7 @@ def StudentDetailView(request,pk):
 #         return self.destroy(request,pk)
 
 #Generics
-class Employees(generics.ListAPIView):
+class Employees(generics.ListAPIView,generics.ListCreateAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     
