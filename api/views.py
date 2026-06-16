@@ -134,7 +134,7 @@ class Employees(generics.ListCreateAPIView):
     serializer_class = EmployeeSerializer
 
 # Primary key based operations 
-class EmployeeDetail(generics.RetrieveAPIView,generics.UpdateAPIView,generics.DestroyAPIView):
+class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     lookup_field = 'pk'
