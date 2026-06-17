@@ -170,4 +170,8 @@ class EmployeeViewSet(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+    def delete(self, request, pk=None):
+        employee = get_object_or_404(Employee,pk=pk)
+        employee.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
         
