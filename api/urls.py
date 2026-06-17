@@ -15,4 +15,8 @@ urlpatterns = [
     # class based views
     path('blog/',views.BlogsView.as_view()),
     path('comment/',views.CommentView.as_view()),
+    
+    # primary key based views
+    path('blog/<int:pk>/',views.BlogDetailView.as_view()),
+    path('comment/<int:pk>/',views.CommentDetailView.as_view())
 ]
