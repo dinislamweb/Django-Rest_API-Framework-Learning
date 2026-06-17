@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_list_or_404
+from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
 from students.models import Student
 from .serializers import StudentSerialzier,EmployeeSerializer
@@ -156,5 +156,10 @@ class EmployeeViewSet(viewsets.ViewSet):
             return Response(serializer.data,status=status.HTTP_201_CREATED)   
 
 
-        
+# Retrieve , Update and Delete object using Primary key using ViewSet
+
+    def retrieve(self,request, pk=None):
+        employee = get_object_or_404(Employee,pk=pk)
+        serializer  = EmployeeSerializer(employee)
+        return Response(serializer.data,status=status.HTTP_200_OK)   
         
