@@ -141,12 +141,20 @@ def StudentDetailView(request,pk):
 #     lookup_field = 'pk'
 
 # ViewSets
+# Get list of objects
 class EmployeeViewSet(viewsets.ViewSet):
     def list(self,request):
         queryset = Employee.objects.all()
         serializer = EmployeeSerializer(queryset,many=True)
         return Response(serializer.data)
     
-    
+# create data
+    def create(self,request):
+        serializer = EmployeeSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)   
+
+
         
         
