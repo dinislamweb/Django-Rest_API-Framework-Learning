@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_list_or_404
 from django.http import JsonResponse
 from students.models import Student
 from .serializers import StudentSerialzier,EmployeeSerializer
@@ -8,7 +8,8 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from employees.models import Employee
 from django.http import Http404
-from rest_framework import mixins, generics
+from rest_framework import mixins, generics,viewsets
+
 
 # GET POST
 
@@ -128,16 +129,24 @@ def StudentDetailView(request,pk):
 #     def delete(self,request, pk):
 #         return self.destroy(request,pk)
 
-#Generics
-class Employees(generics.ListCreateAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
+# #Generics
+# class Employees(generics.ListCreateAPIView):
+#     queryset = Employee.objects.all()
+#     serializer_class = EmployeeSerializer
 
-# Primary key based operations 
-class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-    lookup_field = 'pk'
+# # Primary key based operations 
+# class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Employee.objects.all()
+#     serializer_class = EmployeeSerializer
+#     lookup_field = 'pk'
+
+# ViewSets
+class EmployeeViewSet(viewsets.ViewSet):
+    def list(self,request):
+        queryset = Employee.objects.all()
+        serializer = EmployeeSerializer(queryset,many=True)
+        return Response(serializer.data)
+    
     
         
         
